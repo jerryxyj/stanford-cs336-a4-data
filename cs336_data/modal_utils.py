@@ -4,7 +4,7 @@ import modal
 
 from cs336_data.common import MODAL_SHARED_PATH
 
-SUNET_ID = "TODO"  # NOTE: modal_utils.py should remain effectively unchanged other than adding your SUNET_ID
+SUNET_ID = "jerryxyj"  # NOTE: modal_utils.py should remain effectively unchanged other than adding your SUNET_ID
 if SUNET_ID == "TODO":
     raise ValueError("Please set SUNET_ID in cs336_data/modal_utils.py before running Modal jobs.")
 
@@ -22,8 +22,9 @@ def build_image(*, include_tests: bool = False) -> modal.Image:
     image = image.uv_sync()
     image = image.add_local_python_source("cs336_basics")
     image = image.add_local_python_source("cs336_data")
-    image = image.add_local_file("AGENTS.md", "/root/AGENTS.md")
-    image = image.add_local_file("CLAUDE.md", "/root/CLAUDE.md")
+    for guideline_file in ("AGENTS.md", "CLAUDE.md"):
+        if Path(guideline_file).exists():
+            image = image.add_local_file(guideline_file, f"/root/{guideline_file}")
     if include_tests:
         image = image.add_local_dir("tests", remote_path="/root/tests")
     return image
